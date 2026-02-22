@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ModeSwitcherController;
 use Livewire\Volt\Volt;
+use App\Http\Controllers\AuthorController;
 
 Route::redirect('/', '/login');
 Route::redirect('/dashboard', '/modes')->name('dashboard');
@@ -16,7 +17,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Rutas MVC
     Route::prefix('mvc')->name('mvc.')->group(function () {
         Route::view('/dashboard', 'mvc.dashboard')->name('dashboard');
-        Route::resource('authors', App\Http\Controllers\AutorController::class);
+        Route::resource('authors', AuthorController::class);
     });
 
     // Rutas Livewire (Volt SFC)

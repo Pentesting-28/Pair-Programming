@@ -10,11 +10,11 @@ class Book extends Model
         "title",
         "isbn",
         "num_pages",
-        "autor_id"
+        "author_id"
     ];
 
-    public function autor()
+    public function author()
     {
-        return $this->belongsTo(Autor::class);
+        return $this->belongsTo(Author::class);
     }
 }

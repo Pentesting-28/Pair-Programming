@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Autor;
+use App\Models\Author;
 use Illuminate\Http\Request;
 
-class AutorController extends Controller
+class AuthorController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $authors = Autor::paginate(10);
+        $authors = Author::paginate(10);
         return view('mvc.authors.index', compact('authors'));
     }
 
@@ -35,7 +35,7 @@ class AutorController extends Controller
             'fecha_nacimiento' => 'nullable|date',
         ]);
 
-        Autor::create($validated);
+        Author::create($validated);
 
         return redirect()->route('mvc.authors.index')->with('success', 'Autor creado con éxito.');
     }
@@ -43,7 +43,7 @@ class AutorController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Autor $author)
+    public function show(Author $author)
     {
         return view('mvc.authors.show', compact('author'));
     }
@@ -51,7 +51,7 @@ class AutorController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Autor $author)
+    public function edit(Author $author)
     {
         return view('mvc.authors.edit', compact('author'));
     }
@@ -59,7 +59,7 @@ class AutorController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Autor $author)
+    public function update(Request $request, Author $author)
     {
         $validated = $request->validate([
             'nombre' => 'required|string|max:255',
@@ -75,7 +75,7 @@ class AutorController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Autor $author)
+    public function destroy(Author $author)
     {
         $author->delete();
 
