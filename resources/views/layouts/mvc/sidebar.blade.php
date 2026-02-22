@@ -12,14 +12,18 @@
         </flux:sidebar.group>
 
         <flux:sidebar.group :heading="__('Módulos')" class="grid">
-            <flux:sidebar.item icon="users" :href="route('mvc.authors.index')" :current="request()->routeIs('mvc.authors.*')">
-                {{ __('Autores') }}
-                <flux:badge size="sm" color="blue" inset="top bottom" class="ml-auto">MVC</flux:badge>
-            </flux:sidebar.item>
+            <flux:navlist>
+                <flux:navlist.group expandable :heading="__('Biblioteca')" icon="building-library" :expanded="request()->routeIs('mvc.authors.*')">
+                    <flux:navlist.item icon="users" :href="route('mvc.authors.index')" :current="request()->routeIs('mvc.authors.*')">
+                        {{ __('Autores') }}
+                        <flux:badge size="sm" color="blue" inset="top bottom" class="ml-auto">MVC</flux:badge>
+                    </flux:navlist.item>
 
-            <flux:sidebar.item icon="book-open" href="#" class="opacity-50">
-                {{ __('Libros') }}
-            </flux:sidebar.item>
+                    <flux:navlist.item icon="book-open" href="#" class="opacity-50">
+                        {{ __('Libros') }}
+                    </flux:navlist.item>
+                </flux:navlist.group>
+            </flux:navlist>
         </flux:sidebar.group>
     </flux:sidebar.nav>
 
