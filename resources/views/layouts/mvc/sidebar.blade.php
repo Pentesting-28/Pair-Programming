@@ -7,7 +7,7 @@
     <flux:sidebar.nav>
         <flux:sidebar.group :heading="__('Platform')" class="grid">
             <flux:sidebar.item icon="squares-2x2" :href="route('mvc.dashboard')" :current="request()->routeIs('mvc.dashboard')">
-                {{ __('Dashboard MVC') }}
+                {{ __('Dashboard') }}
             </flux:sidebar.item>
         </flux:sidebar.group>
 
@@ -16,7 +16,6 @@
                 <flux:navlist.group expandable :heading="__('Biblioteca')" icon="building-library" :expanded="request()->routeIs('mvc.authors.*')">
                     <flux:navlist.item icon="users" :href="route('mvc.authors.index')" :current="request()->routeIs('mvc.authors.*')">
                         {{ __('Autores') }}
-                        <flux:badge size="sm" color="blue" inset="top bottom" class="ml-auto">MVC</flux:badge>
                     </flux:navlist.item>
 
                     <flux:navlist.item icon="book-open" href="#" class="opacity-50">
