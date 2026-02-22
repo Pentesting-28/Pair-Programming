@@ -7,7 +7,7 @@ use Livewire\Volt\Volt;
 
 Route::redirect('/', '/login');
 
-Route::view('/modalidades', 'modalidades')
+Route::view('/modes', 'modes')
     ->middleware(['auth', 'verified'])
     ->name('home');
 
