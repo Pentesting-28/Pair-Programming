@@ -7,10 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 class Autor extends Model
 {
     protected $fillable = [
-        'nombre',
-        'apellido',
-        'fecha_nacimiento',
+        'name',
+        'last_name',
+        'country_id',
+        'birth_date',
+        'photo_path',
     ];
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
+    }
 
     public function books()
     {

@@ -14,6 +14,10 @@ return new class extends Migration
         Schema::create('autors', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('last_name')->nullable();
+            $table->foreignId('country_id')->constrained();
+            $table->date('birth_date')->nullable();
+            $table->string('photo_path')->nullable();
             $table->timestamps();
         });
     }
