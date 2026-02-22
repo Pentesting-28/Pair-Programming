@@ -6,15 +6,15 @@
 
     <flux:sidebar.nav>
         <flux:sidebar.group :heading="__('Platform')" class="grid">
-            <flux:sidebar.item icon="squares-2x2" :href="route('livewire.dashboard')" :current="request()->is('authors*')" wire:navigate>
+            <flux:sidebar.item icon="squares-2x2" :href="route('livewire.dashboard')" :current="request()->routeIs('livewire.dashboard')" wire:navigate>
                 {{ __('Dashboard') }}
             </flux:sidebar.item>
         </flux:sidebar.group>
 
         <flux:sidebar.group :heading="__('Módulos')" class="grid">
             <flux:navlist>
-                <flux:navlist.group expandable :heading="__('Biblioteca')" icon="building-library" :expanded="request()->routeIs('authors.*')">
-                    <flux:navlist.item icon="users" :href="route('authors.index')" :current="request()->routeIs('authors.*')" wire:navigate>
+                <flux:navlist.group expandable :heading="__('Biblioteca')" icon="building-library" :expanded="request()->routeIs('livewire.authors.*')">
+                    <flux:navlist.item icon="users" :href="route('livewire.authors.index')" :current="request()->routeIs('livewire.authors.*')" wire:navigate>
                         {{ __('Autores') }}
                     </flux:navlist.item>
 

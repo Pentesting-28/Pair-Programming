@@ -41,7 +41,7 @@ new #[Layout('layouts.livewire')] #[Title('Administración de Autores')] class e
                 <flux:subheading>Modo Livewire Reactivo (Volt)</flux:subheading>
             </div>
 
-            <flux:button variant="primary" :href="route('authors.new')" icon="plus" wire:navigate>
+            <flux:button variant="primary" :href="route('livewire.authors.new')" icon="plus" wire:navigate>
                 Nuevo Autor
             </flux:button>
         </div>
@@ -77,7 +77,7 @@ new #[Layout('layouts.livewire')] #[Title('Administración de Autores')] class e
                             <flux:table.cell>{{ $author->fecha_nacimiento ? \Carbon\Carbon::parse($author->fecha_nacimiento)->format('d/m/Y') : '-' }}</flux:table.cell>
                             <flux:table.cell align="end">
                                 <div class="flex justify-end gap-2">
-                                    <flux:button variant="ghost" size="sm" icon="pencil" :href="route('authors.edit', $author)" wire:navigate />
+                                    <flux:button variant="ghost" size="sm" icon="pencil" :href="route('livewire.authors.edit', $author)" wire:navigate />
                                     
                                     <flux:button variant="ghost" size="sm" icon="trash" 
                                         wire:click="delete({{ $author->id }})" 

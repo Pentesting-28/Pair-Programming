@@ -41,14 +41,14 @@ new #[Layout('layouts.livewire')] #[Title('Gestión de Autor')] class extends Co
 
         session()->flash('success', $message);
 
-        return redirect()->route('authors.index');
+        return redirect()->route('livewire.authors.index');
     }
 }; ?>
 
 <div>
     <flux:container max-width="xl">
         <div class="mb-6">
-            <flux:button variant="ghost" icon="arrow-left" class="-ml-2 mb-2" :href="route('authors.index')" wire:navigate>Volver</flux:button>
+            <flux:button variant="ghost" icon="arrow-left" class="-ml-2 mb-2" :href="route('livewire.authors.index')" wire:navigate>Volver</flux:button>
             <flux:heading size="xl" level="1">{{ $author ? 'Editar Autor' : 'Crear Nuevo Autor' }}</flux:heading>
             <flux:subheading>Modo Livewire Reactivo (Volt)</flux:subheading>
         </div>
@@ -74,7 +74,7 @@ new #[Layout('layouts.livewire')] #[Title('Gestión de Autor')] class extends Co
                 </flux:field>
 
                 <div class="flex justify-end gap-3 pt-6 border-t border-zinc-200 dark:border-zinc-700">
-                    <flux:button variant="ghost" :href="route('authors.index')" wire:navigate>Cancelar</flux:button>
+                    <flux:button variant="ghost" :href="route('livewire.authors.index')" wire:navigate>Cancelar</flux:button>
                     <flux:button type="submit" variant="primary">
                         <span wire:loading.remove wire:target="save">
                             {{ $author ? 'Actualizar Autor' : 'Guardar Autor' }}
