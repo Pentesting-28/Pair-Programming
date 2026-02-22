@@ -20,18 +20,22 @@
         <flux:card class="overflow-hidden">
             <flux:table>
                 <flux:table.columns>
+                    <flux:table.column>Id</flux:table.column>
                     <flux:table.column>Nombre</flux:table.column>
                     <flux:table.column>Apellido</flux:table.column>
                     <flux:table.column>Fecha Nac.</flux:table.column>
+                    <flux:table.column>País</flux:table.column>
                     <flux:table.column align="end">Acciones</flux:table.column>
                 </flux:table.columns>
 
                 <flux:table.rows>
                     @forelse($authors as $author)
                         <flux:table.row>
-                            <flux:table.cell class="font-medium">{{ $author->nombre }}</flux:table.cell>
-                            <flux:table.cell>{{ $author->apellido }}</flux:table.cell>
-                            <flux:table.cell>{{ $author->fecha_nacimiento ? \Carbon\Carbon::parse($author->fecha_nacimiento)->format('d/m/Y') : '-' }}</flux:table.cell>
+                            <flux:table.cell class="font-medium">{{ $author->id }}</flux:table.cell>
+                            <flux:table.cell>{{ $author->name }}</flux:table.cell>
+                            <flux:table.cell>{{ $author->last_name }}</flux:table.cell>
+                            <flux:table.cell>{{ $author->birth_date ? \Carbon\Carbon::parse($author->birth_date)->format('d/m/Y') : '-' }}</flux:table.cell>
+                            <flux:table.cell>{{ $author->country->common_name }}</flux:table.cell>
                             <flux:table.cell align="end">
                                 <div class="flex justify-end gap-2">
                                     <flux:button variant="ghost" size="sm" icon="pencil" :href="route('mvc.authors.edit', $author)" />

@@ -3,16 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Models\Author;
-use Illuminate\Http\Request;
+use App\Models\Country;
+use App\Services\AuthorService;
+use App\Http\Requests\Author\StoreRequest;
+use App\Http\Requests\Author\UpdateRequest;
 
 class AuthorController extends Controller
 {
+    public function __construct(
+        protected AuthorService $authorService
+    ) {}
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $authors = Author::paginate(10);
+        $authors = Author::with('country')->paginate(
+            perPage: 10,
+            columns: ['id', 'name', 'last_name', 'birth_date', 'country_id']
+        );
         return view('mvc.authors.index', compact('authors'));
     }
 
@@ -21,23 +31,25 @@ class AuthorController extends Controller
      */
     public function create()
     {
-        return view('mvc.authors.create');
+        $countries = Country::orderBy('common_name')->get([
+            'id',
+            'common_name',
+            'flag_svg_path'
+        ]);
+        return view('mvc.authors.create', compact('countries'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        $validated = $request->validate([
-            'nombre' => 'required|string|max:255',
-            'apellido' => 'required|string|max:255',
-            'fecha_nacimiento' => 'nullable|date',
-        ]);
+        // El controlador ya no sabe nada de imágenes ni de DTOs.
+        // Solo delega al servicio especializado.
+        $this->authorService->store($request);
 
-        Author::create($validated);
-
-        return redirect()->route('mvc.authors.index')->with('success', 'Autor creado con éxito.');
+        return redirect()->route('mvc.authors.index')
+            ->with('success', 'Autor creado con éxito.');
     }
 
     /**
@@ -53,23 +65,24 @@ class AuthorController extends Controller
      */
     public function edit(Author $author)
     {
-        return view('mvc.authors.edit', compact('author'));
+        $countries = Country::orderBy('common_name')->get(['id', 'common_name']);
+        return view('mvc.authors.edit', compact('author', 'countries'));
     }
+
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Author $author)
+    public function update(UpdateRequest $request, Author $author)
     {
-        $validated = $request->validate([
-            'nombre' => 'required|string|max:255',
-            'apellido' => 'required|string|max:255',
-            'fecha_nacimiento' => 'nullable|date',
-        ]);
+        $this->authorService->update(
+            $author, 
+            $request->validated(), 
+            $request->file('photo_path')
+        );
 
-        $author->update($validated);
-
-        return redirect()->route('mvc.authors.index')->with('success', 'Autor actualizado con éxito.');
+        return redirect()->route('mvc.authors.index')
+            ->with('success', 'Autor actualizado con éxito.');
     }
 
     /**

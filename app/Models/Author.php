@@ -14,6 +14,25 @@ class Author extends Model
         'photo_path',
     ];
 
+    /**
+     * Get the author's photo URL.
+     */
+    protected function photoUrl(): \Illuminate\Database\Eloquent\Casts\Attribute
+    {
+        return \Illuminate\Database\Eloquent\Casts\Attribute::make(
+            get: function () {
+                if (!$this->photo_path) {
+                    return asset('assets_panel/image_placeholder.jpg');
+                }
+
+                /** @var \Illuminate\Filesystem\FilesystemAdapter $storage */
+                $storage = \Illuminate\Support\Facades\Storage::disk('public');
+                
+                return $storage->url($this->photo_path);
+            },
+        );
+    }
+
     public function country()
     {
         return $this->belongsTo(Country::class);
