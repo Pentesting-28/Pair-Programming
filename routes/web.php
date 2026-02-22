@@ -6,6 +6,7 @@ use App\Http\Controllers\ModeSwitcherController;
 use Livewire\Volt\Volt;
 
 Route::redirect('/', '/login');
+Route::redirect('/dashboard', '/modes')->name('dashboard');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('/modes', 'modes')->name('home');
