@@ -21,7 +21,7 @@ class AuthorController extends Controller
     {
         $authors = Author::with('country')->paginate(
             perPage: 10,
-            columns: ['id', 'name', 'last_name', 'birth_date', 'country_id']
+            columns: ['id', 'name', 'last_name', 'birth_date', 'country_id', 'photo_path']
         );
         return view('mvc.authors.index', compact('authors'));
     }
