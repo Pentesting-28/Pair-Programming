@@ -56,15 +56,30 @@
                     @enderror
                 </flux:field>
 
-                <flux:field>
-                    <flux:label>Foto</flux:label>
-                    <flux:input type="file" name="photo_path" />
-                    @error('photo_path')
-                        <p class="mt-2 text-sm text-red-600 dark:text-red-400 font-medium">{{ $message }}</p>
-                    @enderror
-                </flux:field>
-                <div class="mt-4">
-                    <img src="{{ $author->photo_url }}" alt="{{ $author->name }}" class="w-32 h-32 object-cover rounded-lg shadow-sm">
+                <div class="space-y-4">
+                    <div class="flex flex-col sm:flex-row gap-6 items-start">
+                        <div id="image-preview-container" class="relative group author-image-preview-wrapper">
+                            <div class="w-full h-full rounded-xl border-2 border-dashed border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 flex items-center justify-center overflow-hidden transition-all group-hover:border-zinc-300 dark:group-hover:border-zinc-600">
+                                <img id="image-preview" src="{{ $author->photo_url }}" class="{{ $author->photo_path ? '' : 'hidden' }}" />
+                                <div id="image-placeholder" class="flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-500 transition-colors group-hover:text-zinc-500 dark:group-hover:text-zinc-400 {{ $author->photo_path ? 'hidden' : '' }}">
+                                    <flux:icon name="camera" class="w-10 h-10 mb-2 opacity-50" variant="outline" />
+                                    <span class="text-[10px] uppercase tracking-wider font-semibold">Subir foto</span>
+                                </div>
+                            </div>
+                            <button type="button" id="remove-image" class="{{ $author->photo_path ? '' : 'hidden' }} absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow-lg hover:bg-red-600 transition-colors z-20">
+                                <flux:icon name="x-mark" class="w-4 h-4" variant="mini" />
+                            </button>
+                        </div>
+                        
+                        <flux:field class="flex-1 w-full">
+                            <flux:label>Fotografía</flux:label>
+                            <flux:input type="file" name="photo_path" id="photo_input" accept="image/*" />
+                            <flux:description class="mt-1 text-xs">Deja este campo vacío para mantener la foto actual. Formatos: JPG, PNG, WebP.</flux:description>
+                            @error('photo_path')
+                                <p class="mt-2 text-sm text-red-600 dark:text-red-400 font-medium">{{ $message }}</p>
+                            @enderror
+                        </flux:field>
+                    </div>
                 </div>
 
                 <div class="flex justify-end gap-3 pt-6 border-t border-zinc-200 dark:border-zinc-700">
@@ -105,6 +120,50 @@
                     }
                 }
             });
+
+            // Lógica para el previsualizador de imagen
+            const photoInput = document.getElementById('photo_input');
+            const imagePreview = document.getElementById('image-preview');
+            const imagePlaceholder = document.getElementById('image-placeholder');
+            const removeImageBtn = document.getElementById('remove-image');
+            const originalSrc = imagePreview ? imagePreview.src : '';
+            const originalHasImage = imagePreview ? !imagePreview.classList.contains('hidden') : false;
+
+            if (photoInput) {
+                photoInput.addEventListener('change', function() {
+                    const file = this.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            imagePreview.src = e.target.result;
+                            imagePreview.classList.remove('hidden');
+                            imagePlaceholder.classList.add('hidden');
+                            removeImageBtn.classList.remove('hidden');
+                        }
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+
+            if (removeImageBtn) {
+                removeImageBtn.addEventListener('click', function() {
+                    photoInput.value = '';
+                    // Si estamos editando y quitamos la selección nueva, volvemos al estado inicial
+                    if (originalHasImage) {
+                        imagePreview.src = originalSrc;
+                        imagePreview.classList.remove('hidden');
+                        imagePlaceholder.classList.add('hidden');
+                        // Si la imagen original no es la de "placeholder", dejamos que el botón X se quede si queremos
+                        // Pero por simplicidad, si el input está vacío, ocultamos la X si no hay nada que borrar
+                        this.classList.add('hidden');
+                    } else {
+                        imagePreview.src = '';
+                        imagePreview.classList.add('hidden');
+                        imagePlaceholder.classList.remove('hidden');
+                        this.classList.add('hidden');
+                    }
+                });
+            }
         });
     </script>
     @endpush

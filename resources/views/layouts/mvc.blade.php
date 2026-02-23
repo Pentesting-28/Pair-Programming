@@ -89,6 +89,25 @@
             .ts-control, .ts-dropdown .option {
                 font-size: 0.875rem !important;
             }
+
+            /* Estilos para el Previsualizador de Imágenes */
+            .author-image-preview-wrapper {
+                width: 8rem !important;
+                height: 8rem !important;
+                min-width: 8rem !important;
+                min-height: 8rem !important;
+                flex-shrink: 0 !important;
+            }
+
+            .author-image-preview-wrapper img:not(.hidden) {
+                width: 100% !important;
+                height: 100% !important;
+                object-fit: cover !important;
+                display: block !important;
+            }
+            .author-image-preview-wrapper .hidden {
+                display: none !important;
+            }
         </style>
     </head>
     <body class="min-h-screen bg-white dark:bg-zinc-800">
