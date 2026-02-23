@@ -99,7 +99,7 @@ class AuthorController extends Controller
      */
     public function destroy(Author $author)
     {
-        $author->delete();
+        $this->authorService->delete($author);
 
         return redirect()->route('mvc.authors.index')->with('success', 'Autor eliminado con éxito.');
     }

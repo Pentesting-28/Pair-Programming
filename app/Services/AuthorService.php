@@ -20,7 +20,6 @@ class AuthorService
     {
         $photoPath = null;
 
-        // Delegamos el almacenamiento al FileService
         if ($request->hasFile('photo_path')) {
             $photoPath = $this->fileService->upload(
                 $request->file('photo_path'), 
@@ -28,10 +27,8 @@ class AuthorService
             );
         }
 
-        // Creamos el DTO con datos limpios
         $dto = AuthorData::fromArray($request->validated(), $photoPath);
 
-        // Retornamos el modelo creado
         return Author::create($dto->toArray());
     }
 
@@ -44,15 +41,20 @@ class AuthorService
         $photoPath = $author->photo_path;
 
         if ($newPhoto) {
-            // Eliminamos la foto anterior físicamente
             $this->fileService->delete($author->photo_path);
-            
-            // Subimos la nueva
             $photoPath = $this->fileService->upload($newPhoto, 'authors');
         }
 
         $dto = AuthorData::fromArray($validatedData, $photoPath);
 
         return $author->update($dto->toArray());
+    }
+
+    public function delete(Author $author): bool
+    {
+        if ($author->photo_path) {
+            $this->fileService->delete($author->photo_path);
+        }
+        return $author->delete();
     }
 }
