@@ -68,7 +68,13 @@ class AuthorController extends Controller
      */
     public function edit(Author $author)
     {
-        $countries = Country::orderBy('common_name')->get(['id', 'common_name']);
+        $countries = Country::orderBy('common_name')->get()->map(function($c) {
+            return [
+                'id' => $c->id,
+                'common_name' => $c->common_name,
+                'flagUrl' => $c->flag_url,
+            ];
+        });
         return view('mvc.authors.edit', compact('author', 'countries'));
     }
 
