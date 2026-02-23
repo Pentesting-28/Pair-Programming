@@ -18,7 +18,7 @@
                         {{ __('Autores') }}
                     </flux:navlist.item>
 
-                    <flux:navlist.item icon="book-open" href="#" class="opacity-50">
+                    <flux:navlist.item icon="book-open" :href="route('mvc.books.index')" :current="request()->routeIs('mvc.books.*')">
                         {{ __('Libros') }}
                     </flux:navlist.item>
                 </flux:navlist.group>

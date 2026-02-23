@@ -12,7 +12,12 @@ class BookController extends Controller
      */
     public function index()
     {
-        //
+        $books = Book::with('author')->paginate(
+            perPage: 10,
+            columns: ['id', 'title', 'isbn', 'num_pages', 'author_id']
+        );
+
+        return view('mvc.books.index', compact('books'));
     }
 
     /**
