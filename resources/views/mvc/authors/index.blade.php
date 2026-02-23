@@ -75,19 +75,17 @@
                     @empty
                         <flux:table.row>
                             <flux:table.cell colspan="5">
-                                <div class="flex flex-col items-center justify-center py-12 text-center">
-                                    <div class="h-14 w-14 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center mb-4 border border-zinc-200/80 dark:border-zinc-700/80">
-                                        <svg class="h-6 w-6 text-zinc-400 dark:text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                                        </svg>
+                                <div class="flex flex-col items-center justify-center py-20 text-center">
+                                    <div class="relative mb-6">
+                                        <div class="absolute inset-0 bg-zinc-100 dark:bg-zinc-800 rounded-full scale-150 blur-xl opacity-50"></div>
+                                        <div class="relative h-16 w-16 rounded-2xl bg-white dark:bg-zinc-800 flex items-center justify-center border border-zinc-200 dark:border-zinc-700 shadow-sm">
+                                            <flux:icon name="users" class="h-8 w-8 text-zinc-400 dark:text-zinc-500" variant="outline" />
+                                        </div>
                                     </div>
-                                    <h3 class="text-sm font-medium text-zinc-900 dark:text-zinc-100">Sin autores</h3>
-                                    <p class="mt-1 text-sm text-zinc-500 dark:text-zinc-400 max-w-sm">No se encontraron autores en la base de datos. Comienza añadiendo uno nuevo.</p>
-                                    <div class="mt-4">
-                                        <flux:button variant="ghost" size="sm" :href="route('mvc.authors.create')" icon="plus">
-                                            Añadir Autor
-                                        </flux:button>
-                                    </div>
+                                    <h3 class="text-base font-semibold text-zinc-900 dark:text-zinc-100 italic">No hay autores registrados</h3>
+                                    <p class="mt-2 text-sm text-zinc-500 dark:text-zinc-400 max-w-xs mx-auto">
+                                        Parece que aún no has añadido ningún autor a la colección mvc.
+                                    </p>
                                 </div>
                             </flux:table.cell>
                         </flux:table.row>
