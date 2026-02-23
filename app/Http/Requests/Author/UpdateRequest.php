@@ -26,7 +26,8 @@ class UpdateRequest extends FormRequest
             'last_name' => 'required|string|max:255',
             'country_id' => 'required|exists:countries,id',
             'birth_date' => 'nullable|date',
-            'photo_path' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'photo_path' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'remove_photo' => 'nullable|boolean',
         ];
     }
 

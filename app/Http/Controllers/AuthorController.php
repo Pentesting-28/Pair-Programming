@@ -87,7 +87,8 @@ class AuthorController extends Controller
         $this->authorService->update(
             $author, 
             $request->validated(), 
-            $request->file('photo_path')
+            $request->file('photo_path'),
+            $request->boolean('remove_photo')
         );
 
         return redirect()->route('mvc.authors.index')

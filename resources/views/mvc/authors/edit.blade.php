@@ -73,6 +73,7 @@
                         
                         <flux:field class="flex-1 w-full">
                             <flux:label>Fotografía</flux:label>
+                            <input type="hidden" name="remove_photo" id="remove_photo_input" value="0">
                             <flux:input type="file" name="photo_path" id="photo_input" accept="image/*" />
                             <flux:description class="mt-1 text-xs">Deja este campo vacío para mantener la foto actual. Formatos: JPG, PNG, WebP.</flux:description>
                             @error('photo_path')
@@ -126,6 +127,7 @@
             const imagePreview = document.getElementById('image-preview');
             const imagePlaceholder = document.getElementById('image-placeholder');
             const removeImageBtn = document.getElementById('remove-image');
+            const removePhotoInput = document.getElementById('remove_photo_input');
             const originalSrc = imagePreview ? imagePreview.src : '';
             const originalHasImage = imagePreview ? !imagePreview.classList.contains('hidden') : false;
 
@@ -133,6 +135,7 @@
                 photoInput.addEventListener('change', function() {
                     const file = this.files[0];
                     if (file) {
+                        if (removePhotoInput) removePhotoInput.value = '0';
                         const reader = new FileReader();
                         reader.onload = function(e) {
                             imagePreview.src = e.target.result;
@@ -148,20 +151,19 @@
             if (removeImageBtn) {
                 removeImageBtn.addEventListener('click', function() {
                     photoInput.value = '';
+                    if (removePhotoInput) removePhotoInput.value = '1';
+                    
                     // Si estamos editando y quitamos la selección nueva, volvemos al estado inicial
-                    if (originalHasImage) {
-                        imagePreview.src = originalSrc;
-                        imagePreview.classList.remove('hidden');
-                        imagePlaceholder.classList.add('hidden');
-                        // Si la imagen original no es la de "placeholder", dejamos que el botón X se quede si queremos
-                        // Pero por simplicidad, si el input está vacío, ocultamos la X si no hay nada que borrar
-                        this.classList.add('hidden');
-                    } else {
-                        imagePreview.src = '';
-                        imagePreview.classList.add('hidden');
-                        imagePlaceholder.classList.remove('hidden');
-                        this.classList.add('hidden');
+                    if (originalHasImage && this.dataset.action !== 'remove-original') {
+                        // Si el usuario subió algo y le dio a X, volvemos a la original
+                        // Pero si le dio a X sobre la original, ahí sí marcamos borrar
                     }
+                    
+                    // Lógica simplificada: si le dan a X, vaciamos todo y marcamos borrar
+                    imagePreview.src = '';
+                    imagePreview.classList.add('hidden');
+                    imagePlaceholder.classList.remove('hidden');
+                    this.classList.add('hidden');
                 });
             }
         });

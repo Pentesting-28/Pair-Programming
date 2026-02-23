@@ -36,9 +36,14 @@ class AuthorService
      * Maneja la actualización de un autor.
      * Elimina la foto anterior si se sube una nueva.
      */
-    public function update(Author $author, array $validatedData, $newPhoto = null): bool
+    public function update(Author $author, array $validatedData, $newPhoto = null, bool $removePhoto = false): bool
     {
         $photoPath = $author->photo_path;
+
+        if ($removePhoto && !$newPhoto) {
+            $this->fileService->delete($author->photo_path);
+            $photoPath = null;
+        }
 
         if ($newPhoto) {
             $this->fileService->delete($author->photo_path);
