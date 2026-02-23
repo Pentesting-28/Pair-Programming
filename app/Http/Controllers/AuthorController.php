@@ -31,11 +31,14 @@ class AuthorController extends Controller
      */
     public function create()
     {
-        $countries = Country::orderBy('common_name')->get([
-            'id',
-            'common_name',
-            'flag_svg_path'
-        ]);
+        $countries = Country::orderBy('common_name')->get()->map(function($c) {
+            return [
+                'id' => $c->id,
+                'common_name' => $c->common_name,
+                'flagUrl' => $c->flag_url,
+            ];
+        });
+        
         return view('mvc.authors.create', compact('countries'));
     }
 
