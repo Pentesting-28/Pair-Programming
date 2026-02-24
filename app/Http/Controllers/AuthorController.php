@@ -5,13 +5,16 @@ namespace App\Http\Controllers;
 use App\Models\Author;
 use App\Models\Country;
 use App\Services\AuthorService;
+use App\Services\FileService;
+use App\DTOs\AuthorData;
 use App\Http\Requests\Author\StoreRequest;
 use App\Http\Requests\Author\UpdateRequest;
 
 class AuthorController extends Controller
 {
     public function __construct(
-        protected AuthorService $authorService
+        protected AuthorService $authorService,
+        protected FileService $fileService
     ) {}
 
     /**
@@ -47,7 +50,13 @@ class AuthorController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $author = $this->authorService->store($request);
+        $photoPath = null;
+        if ($request->hasFile('photo_path')) {
+            $photoPath = $this->fileService->upload($request->file('photo_path'), 'authors');
+        }
+
+        $dto = AuthorData::fromArray($request->validated(), $photoPath);
+        $author = $this->authorService->store($dto);
 
         if ($request->expectsJson()) {
             return response()->json([
@@ -88,12 +97,26 @@ class AuthorController extends Controller
      */
     public function update(UpdateRequest $request, Author $author)
     {
-        $this->authorService->update(
-            $author, 
-            $request->validated(), 
-            $request->file('photo_path'),
-            $request->boolean('remove_photo')
-        );
+        $photoPath = $author->photo_path;
+
+        // Caso 1: Se solicita eliminar la foto actual
+        if ($request->boolean('remove_photo') && !$request->hasFile('photo_path')) {
+            if ($author->photo_path) {
+                $this->fileService->delete($author->photo_path);
+            }
+            $photoPath = null;
+        }
+
+        // Caso 2: Se sube una nueva foto (reemplaza la anterior)
+        if ($request->hasFile('photo_path')) {
+            if ($author->photo_path) {
+                $this->fileService->delete($author->photo_path);
+            }
+            $photoPath = $this->fileService->upload($request->file('photo_path'), 'authors');
+        }
+
+        $dto = AuthorData::fromArray($request->validated(), $photoPath);
+        $this->authorService->update($author, $dto);
 
         return redirect()->route('mvc.authors.index')
             ->with('success', 'Autor actualizado con éxito.');

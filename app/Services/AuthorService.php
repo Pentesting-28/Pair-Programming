@@ -14,45 +14,20 @@ class AuthorService
 
     /**
      * Maneja la creación integral de un autor.
-     * Cumple SRP al coordinar el almacenamiento y la base de datos.
+     * Recibe un DTO ya procesado (incluyendo rutas de archivos si existen).
      */
-    public function store(StoreRequest $request): Author
+    public function store(AuthorData $data): Author
     {
-        $photoPath = null;
-
-        if ($request->hasFile('photo_path')) {
-            $photoPath = $this->fileService->upload(
-                $request->file('photo_path'), 
-                'authors'
-            );
-        }
-
-        $dto = AuthorData::fromArray($request->validated(), $photoPath);
-
-        return Author::create($dto->toArray());
+        return Author::create($data->toArray());
     }
 
     /**
      * Maneja la actualización de un autor.
-     * Elimina la foto anterior si se sube una nueva.
+     * Recibe el modelo y el DTO con los nuevos datos.
      */
-    public function update(Author $author, array $validatedData, $newPhoto = null, bool $removePhoto = false): bool
+    public function update(Author $author, AuthorData $data): bool
     {
-        $photoPath = $author->photo_path;
-
-        if ($removePhoto && !$newPhoto) {
-            $this->fileService->delete($author->photo_path);
-            $photoPath = null;
-        }
-
-        if ($newPhoto) {
-            $this->fileService->delete($author->photo_path);
-            $photoPath = $this->fileService->upload($newPhoto, 'authors');
-        }
-
-        $dto = AuthorData::fromArray($validatedData, $photoPath);
-
-        return $author->update($dto->toArray());
+        return $author->update($data->toArray());
     }
 
     public function delete(Author $author): bool

@@ -6,6 +6,8 @@ use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use App\Services\AuthorService;
+use App\Services\FileService;
+use App\DTOs\AuthorData;
 use App\Livewire\Forms\AuthorForm;
 use Livewire\WithFileUploads;
 
@@ -20,31 +22,35 @@ new #[Layout('layouts.livewire')] #[Title('Gestión de Autor')] class extends Co
         $this->form->setAuthor($author);
     }
 
-    public function save(AuthorService $authorService)
+    public function save(AuthorService $authorService, FileService $fileService)
     {
         $this->form->validate();
 
+        $photoPath = $this->form->author?->photo_path;
+
+        ////////////////// IMPORTANTE /////////////////////////////
+        
+        // Lógica de archivos en el "Adaptador" (Livewire)
+        // Caso 1: Eliminación explícita de foto existente
+        if ($this->form->remove_photo && !$this->form->photo_path) {
+            if ($photoPath) $fileService->delete($photoPath);
+            $photoPath = null;
+        }
+
+        // Caso 2: Nueva foto subida (reemplaza la anterior si existe)
+        if ($this->form->photo_path) {
+            if ($photoPath) $fileService->delete($photoPath);
+            $photoPath = $fileService->upload($this->form->photo_path, 'authors');
+        }
+
+        // Transformación al "Contrato Universal" (DTO)
+        $dto = AuthorData::fromArray($this->form->all(), $photoPath);
+
         if ($this->form->author && $this->form->author->exists) {
-            $authorService->update(
-                $this->form->author, 
-                $this->form->all(), 
-                $this->form->photo_path,
-                $this->form->remove_photo
-            );
+            $authorService->update($this->form->author, $dto);
             $message = 'Autor actualizado con éxito.';
         } else {
-            // Manual creation for SFC
-            $photoPathSaved = $this->form->photo_path 
-                ? $this->form->photo_path->store('authors', 'public') 
-                : null;
-                
-            Author::create([
-                'name' => $this->form->name,
-                'last_name' => $this->form->last_name,
-                'country_id' => $this->form->country_id,
-                'birth_date' => $this->form->birth_date ?: null,
-                'photo_path' => $photoPathSaved,
-            ]);
+            $authorService->store($dto);
             $message = 'Autor creado con éxito.';
         }
 
