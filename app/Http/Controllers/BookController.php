@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\{Book, Author};
 use Illuminate\Http\Request;
-use App\Http\Requests\Book\StoreRequest;
+use App\Http\Requests\Book\{StoreRequest, UpdateRequest};
 use App\Services\BookService;
 
 class BookController extends Controller
@@ -67,15 +67,31 @@ class BookController extends Controller
      */
     public function edit(Book $book)
     {
-        //
+        $authors = Author::select('id', 'name', 'last_name')
+            ->orderBy('name')
+            ->get();
+            
+        $countries = \App\Models\Country::select('id', 'common_name', 'flag_svg_path')
+            ->orderBy('common_name')
+            ->get()
+            ->map(fn($c) => [
+                'id' => $c->id,
+                'common_name' => $c->common_name,
+                'flagUrl' => $c->flag_url,
+            ]);
+
+        return view('mvc.books.edit', compact('book', 'authors', 'countries'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Book $book)
+    public function update(UpdateRequest $request, Book $book)
     {
-        //
+        $this->bookService->update($book, $request->validated());
+
+        return redirect()->route('mvc.books.index')
+            ->with('success', 'Libro actualizado con éxito.');
     }
 
     /**
@@ -83,6 +99,9 @@ class BookController extends Controller
      */
     public function destroy(Book $book)
     {
-        //
+        $this->bookService->delete($book);
+
+        return redirect()->route('mvc.books.index')
+            ->with('success', 'Libro eliminado con éxito.');
     }
 }

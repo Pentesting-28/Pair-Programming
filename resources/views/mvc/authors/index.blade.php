@@ -17,6 +17,12 @@
             </flux:callout>
         @endif
 
+        @if(session('error'))
+            <flux:callout variant="danger" class="mb-6 shadow-sm border-red-200/50 dark:border-red-900/50">
+                {{ session('error') }}
+            </flux:callout>
+        @endif
+
         <flux:card class="overflow-hidden">
             <flux:table>
                 <flux:table.columns>
@@ -62,6 +68,7 @@
                             {{-- Acciones --}}
                             <flux:table.cell align="end">
                                 <div class="flex justify-end gap-1 opacity-100 md:opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
+                                    <flux:button variant="ghost" size="sm" icon="eye" :href="route('mvc.authors.show', $author)" class="text-zinc-400 hover:text-zinc-900 dark:hover:text-white" />
                                     <flux:button variant="ghost" size="sm" icon="pencil" :href="route('mvc.authors.edit', $author)" class="text-zinc-400 hover:text-blue-600 dark:hover:text-blue-400" />
                                     
                                     <form action="{{ route('mvc.authors.destroy', $author) }}" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar este autor?')">

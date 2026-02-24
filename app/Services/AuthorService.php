@@ -57,9 +57,15 @@ class AuthorService
 
     public function delete(Author $author): bool
     {
+        // Podemos implemensar SotfDelete mas adelante 
+        if ($author->books()->exists()) {
+            throw new \Exception("No se puede eliminar el autor porque tiene libros asociados.");
+        }
+
         if ($author->photo_path) {
             $this->fileService->delete($author->photo_path);
         }
+
         return $author->delete();
     }
 }

@@ -61,11 +61,9 @@ class AuthorController extends Controller
             ->with('success', 'Autor creado con éxito.');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Author $author)
     {
+        $author->load('books', 'country');
         return view('mvc.authors.show', compact('author'));
     }
 
@@ -106,8 +104,11 @@ class AuthorController extends Controller
      */
     public function destroy(Author $author)
     {
-        $this->authorService->delete($author);
-
-        return redirect()->route('mvc.authors.index')->with('success', 'Autor eliminado con éxito.');
+        try {
+            $this->authorService->delete($author);
+            return redirect()->route('mvc.authors.index')->with('success', 'Autor eliminado con éxito.');
+        } catch (\Exception $e) {
+            return redirect()->route('mvc.authors.index')->with('error', $e->getMessage());
+        }
     }
 }
