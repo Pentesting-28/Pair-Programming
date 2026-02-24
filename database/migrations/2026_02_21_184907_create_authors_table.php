@@ -14,10 +14,11 @@ return new class extends Migration
         Schema::create('authors', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('last_name')->nullable();
+            $table->string('last_name');
             $table->foreignId('country_id')->constrained();
             $table->date('birth_date')->nullable();
             $table->string('photo_path')->nullable();
+            $table->unique(['name', 'last_name']);
             $table->timestamps();
         });
     }
