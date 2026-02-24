@@ -47,9 +47,15 @@ class AuthorController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        // El controlador ya no sabe nada de imágenes ni de DTOs.
-        // Solo delega al servicio especializado.
-        $this->authorService->store($request);
+        $author = $this->authorService->store($request);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'id' => $author->id,
+                'name' => $author->name . ' ' . $author->last_name,
+                'message' => 'Autor creado con éxito y seleccionado automáticamente.'
+            ]);
+        }
 
         return redirect()->route('mvc.authors.index')
             ->with('success', 'Autor creado con éxito.');

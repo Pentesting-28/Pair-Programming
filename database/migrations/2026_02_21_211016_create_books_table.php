@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('books', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->string('isbn')->unique();
-            $table->integer('num_pages');
-            $table->foreignId('autor_id')->constrained();
+            $table->string('title', 255);
+            $table->string('isbn', 20)->unique();
+            $table->integer('num_pages')->unsigned();
+            $table->foreignId('author_id')->constrained();
             $table->timestamps();
         });
     }

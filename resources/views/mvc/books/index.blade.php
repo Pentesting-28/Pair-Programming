@@ -36,24 +36,35 @@
                                 {{ $book->id }}
                             </flux:table.cell>
 
-                             {{-- Columna Autor (Avatar + Nombre) --}}
-                            <flux:table.cell>
-                                <div class="flex items-center gap-3">
-                                    <img src="{{ $book->photo_url }}" alt="Avatar de {{ $book->title }}" class="h-9 w-9 shrink-0 rounded-full object-cover border border-zinc-200/80 dark:border-zinc-700/80 shadow-sm" />
-                                    <div class="flex flex-col">
-                                        <span class="font-medium text-zinc-900 dark:text-zinc-100">
-                                            {{ $book->title }}
-                                        </span>
-                                    </div>
-                                </div>
+                            {{-- Columna Título --}}
+                            <flux:table.cell class="font-medium text-zinc-900 dark:text-zinc-100">
+                                {{ $book->title }}
                             </flux:table.cell>
 
+                            {{-- Columna ISBN --}}
                             <flux:table.cell class="text-zinc-600 dark:text-zinc-400">
                                 {{ $book->isbn }}
                             </flux:table.cell>
 
+                            {{-- Columna Páginas --}}
                             <flux:table.cell class="text-zinc-600 dark:text-zinc-400">
                                 {{ $book->num_pages }}
+                            </flux:table.cell>
+
+                            {{-- Columna Autor --}}
+                            <flux:table.cell>
+                                <div class="flex items-center gap-3">
+                                    <div class="h-9 w-9 shrink-0 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center border border-zinc-200/80 dark:border-zinc-700/80 overflow-hidden shadow-sm">
+                                        @if($book->author->photo_url)
+                                            <img src="{{ $book->author->photo_url }}" alt="Avatar de {{ $book->author->name }}" class="h-full w-full object-cover" />
+                                        @else
+                                            <flux:icon name="user" class="h-5 w-5 text-zinc-400" variant="outline" />
+                                        @endif
+                                    </div>
+                                    <span class="font-medium text-zinc-900 dark:text-zinc-100">
+                                        {{ $book->author->name }} {{ $book->author->last_name }}
+                                    </span>
+                                </div>
                             </flux:table.cell>
 
                             {{-- Acciones --}}
