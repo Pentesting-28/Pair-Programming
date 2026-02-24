@@ -1,41 +1,41 @@
 <?php
 
-use App\Models\Autor;
-use Livewire\Volt\Component;
+use App\Models\Author;
+use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 
 new #[Layout('layouts.livewire')] #[Title('Gestión de Autor')] class extends Component
 {
-    public ?Autor $author = null;
+    public ?Author $author = null;
 
-    // We can use a Form Object or model properties.
-    // To minimize redundancy as requested:
-    public string $nombre = '';
-    public string $apellido = '';
-    public string $fecha_nacimiento = '';
+    public string $name = '';
+    public string $last_name = '';
+    public string $birth_date = '';
 
-    public function mount(?Autor $author)
+    public function mount(?Author $author)
     {
         if ($author && $author->exists) {
             $this->author = $author;
-            $this->fill($author->toArray());
+            $this->name = $author->name;
+            $this->last_name = $author->last_name;
+            $this->birth_date = $author->birth_date ?? '';
         }
     }
 
     public function save()
     {
         $validated = $this->validate([
-            'nombre' => 'required|string|max:255',
-            'apellido' => 'required|string|max:255',
-            'fecha_nacimiento' => 'nullable|date',
+            'name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'birth_date' => 'nullable|date',
         ]);
 
         if ($this->author && $this->author->exists) {
             $this->author->update($validated);
             $message = 'Autor actualizado con éxito.';
         } else {
-            Autor::create($validated);
+            Author::create($validated);
             $message = 'Autor creado con éxito.';
         }
 
@@ -57,20 +57,20 @@ new #[Layout('layouts.livewire')] #[Title('Gestión de Autor')] class extends Co
             <form wire:submit="save" class="space-y-6">
                 <flux:field>
                     <flux:label>Nombre</flux:label>
-                    <flux:input wire:model="nombre" placeholder="Ej: Gabriel" />
-                    <flux:error name="nombre" />
+                    <flux:input wire:model="name" placeholder="Ej: Gabriel" />
+                    <flux:error name="name" />
                 </flux:field>
 
                 <flux:field>
                     <flux:label>Apellido</flux:label>
-                    <flux:input wire:model="apellido" placeholder="Ej: García Márquez" />
-                    <flux:error name="apellido" />
+                    <flux:input wire:model="last_name" placeholder="Ej: García Márquez" />
+                    <flux:error name="last_name" />
                 </flux:field>
 
                 <flux:field>
                     <flux:label>Fecha de Nacimiento</flux:label>
-                    <flux:input type="date" wire:model="fecha_nacimiento" />
-                    <flux:error name="fecha_nacimiento" />
+                    <flux:input type="date" wire:model="birth_date" />
+                    <flux:error name="birth_date" />
                 </flux:field>
 
                 <div class="flex justify-end gap-3 pt-6 border-t border-zinc-200 dark:border-zinc-700">

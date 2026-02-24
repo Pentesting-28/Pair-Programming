@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ModeSwitcherController;
-use Livewire\Volt\Volt;
 use App\Http\Controllers\{AuthorController, BookController};
 
 Route::redirect('/', '/login');
@@ -21,13 +20,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('books', BookController::class);
     });
 
-    // Rutas Livewire (Volt SFC)
+    // Rutas Livewire (SFC)
     Route::prefix('livewire')->name('livewire.')->group(function () {
         Route::view('/dashboard', 'livewire.dashboard')->name('dashboard');
         
-        Volt::route('/authors', 'authors.index')->name('authors.index');
-        Volt::route('/authors/create', 'authors.form')->name('authors.new');
-        Volt::route('/authors/{author}/edit', 'authors.form')->name('authors.edit');
+        Route::livewire('/authors', 'authors.index')->name('authors.index');
+        Route::livewire('/authors/create', 'authors.form')->name('authors.new');
+        Route::livewire('/authors/{author}/edit', 'authors.form')->name('authors.edit');
     });
 });
 
