@@ -24,8 +24,14 @@ new #[Layout('layouts.livewire')] #[Title('Detalle de Autor')] class extends Com
         </div>
         
         <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6">
-            <div class="h-24 w-24 shrink-0 rounded-2xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center border-2 border-white dark:border-zinc-700 shadow-xl overflow-hidden">
-                <img src="{{ $author->photo_url }}" alt="Foto de {{ $author->name }}" class="h-full w-full object-cover" />
+            <div class="author-image-preview-wrapper rounded-2xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center border-2 border-white dark:border-zinc-700 shadow-xl overflow-hidden relative group">
+                @if ($author->photo_path)
+                    <img src="{{ $author->photo_url }}" alt="Foto de {{ $author->name }}" />
+                @else
+                    <div class="flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-500">
+                        <flux:icon name="camera" class="w-10 h-10 opacity-50" variant="outline" />
+                    </div>
+                @endif
             </div>
             <div class="flex flex-col gap-1">
                 <flux:heading size="xl" level="1" class="font-bold tracking-tight text-zinc-900 dark:text-white">
