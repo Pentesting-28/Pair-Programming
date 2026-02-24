@@ -123,6 +123,8 @@ new #[Layout('layouts.livewire')] #[Title('Administración de Autores')] class e
                             {{-- Acciones --}}
                             <flux:table.cell align="end">
                                 <div class="flex justify-end gap-1 opacity-100 md:opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
+                                    <flux:button variant="ghost" size="sm" icon="eye" :href="route('livewire.authors.show', $author)" class="text-zinc-400 hover:text-blue-600 dark:hover:text-blue-400" wire:navigate />
+                                    
                                     <flux:button variant="ghost" size="sm" icon="pencil" :href="route('livewire.authors.edit', $author)" class="text-zinc-400 hover:text-blue-600 dark:hover:text-blue-400" wire:navigate />
                                     
                                     <flux:button variant="ghost" size="sm" icon="trash" 

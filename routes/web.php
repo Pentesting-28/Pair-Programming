@@ -26,6 +26,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         
         Route::livewire('/authors', 'authors.index')->name('authors.index');
         Route::livewire('/authors/create', 'authors.form')->name('authors.new');
+        Route::livewire('/authors/{author}', 'authors.show')->name('authors.show');
         Route::livewire('/authors/{author}/edit', 'authors.form')->name('authors.edit');
     });
 });
