@@ -6,6 +6,7 @@ use App\Models\{Book, Author};
 use Illuminate\Http\Request;
 use App\Http\Requests\Book\{StoreRequest, UpdateRequest};
 use App\Services\BookService;
+use App\DTOs\BookData;
 
 class BookController extends Controller
 {
@@ -48,7 +49,8 @@ class BookController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $this->bookService->store($request);
+        $dto = BookData::fromArray($request->validated());
+        $this->bookService->store($dto);
 
         return redirect()->route('mvc.books.index')
             ->with('success', 'Libro creado con éxito.');
@@ -88,7 +90,8 @@ class BookController extends Controller
      */
     public function update(UpdateRequest $request, Book $book)
     {
-        $this->bookService->update($book, $request->validated());
+        $dto = BookData::fromArray($request->validated());
+        $this->bookService->update($book, $dto);
 
         return redirect()->route('mvc.books.index')
             ->with('success', 'Libro actualizado con éxito.');
