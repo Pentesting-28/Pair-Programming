@@ -22,7 +22,7 @@ readonly class AuthorData
             name: $validatedData['name'],
             last_name: $validatedData['last_name'],
             country_id: (int) $validatedData['country_id'],
-            birth_date: $validatedData['birth_date'] ?? null,
+            birth_date: (!empty($validatedData['birth_date'])) ? $validatedData['birth_date'] : null,
             photo_path: $photoPath
         );
     }

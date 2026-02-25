@@ -24,27 +24,27 @@ new #[Layout('layouts.livewire')] #[Title('Gestión de Autor')] class extends Co
 
     public function save(AuthorService $authorService, FileService $fileService)
     {
-        $this->form->validate();
+        $validatedData = $this->form->validate();
 
         $photoPath = $this->form->author?->photo_path;
 
-        ////////////////// IMPORTANTE /////////////////////////////
-        
-        // Lógica de archivos en el "Adaptador" (Livewire)
-        // Caso 1: Eliminación explícita de foto existente
+        // Lógica de archivos
         if ($this->form->remove_photo && !$this->form->photo_path) {
             if ($photoPath) $fileService->delete($photoPath);
             $photoPath = null;
         }
 
-        // Caso 2: Nueva foto subida (reemplaza la anterior si existe)
         if ($this->form->photo_path) {
             if ($photoPath) $fileService->delete($photoPath);
             $photoPath = $fileService->upload($this->form->photo_path, 'authors');
         }
 
+        // Asegurar que birth_date sea null si está vacío
+        $data = $this->form->all();
+        $data['birth_date'] = !empty($data['birth_date']) ? $data['birth_date'] : null;
+
         // Transformación al "Contrato Universal" (DTO)
-        $dto = AuthorData::fromArray($this->form->all(), $photoPath);
+        $dto = AuthorData::fromArray($data, $photoPath);
 
         if ($this->form->author && $this->form->author->exists) {
             $authorService->update($this->form->author, $dto);

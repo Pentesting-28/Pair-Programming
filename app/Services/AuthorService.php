@@ -27,6 +27,11 @@ class AuthorService
      */
     public function update(Author $author, AuthorData $data): bool
     {
+        // Si hay una nueva foto y es distinta a la actual, limpiamos la anterior
+        if ($data->photo_path && $author->photo_path && $data->photo_path !== $author->photo_path) {
+            $this->fileService->delete($author->photo_path);
+        }
+
         return $author->update($data->toArray());
     }
 

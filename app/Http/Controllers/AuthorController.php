@@ -101,17 +101,11 @@ class AuthorController extends Controller
 
         // Caso 1: Se solicita eliminar la foto actual
         if ($request->boolean('remove_photo') && !$request->hasFile('photo_path')) {
-            if ($author->photo_path) {
-                $this->fileService->delete($author->photo_path);
-            }
             $photoPath = null;
         }
 
-        // Caso 2: Se sube una nueva foto (reemplaza la anterior)
+        // Caso 2: Se sube una nueva foto (la limpieza la hace el Servicio)
         if ($request->hasFile('photo_path')) {
-            if ($author->photo_path) {
-                $this->fileService->delete($author->photo_path);
-            }
             $photoPath = $this->fileService->upload($request->file('photo_path'), 'authors');
         }
 

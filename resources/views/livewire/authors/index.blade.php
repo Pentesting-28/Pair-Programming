@@ -5,6 +5,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
+use App\Services\AuthorService;
 
 new #[Layout('layouts.livewire')] #[Title('Administración de Autores')] class extends Component
 {
@@ -17,15 +18,10 @@ new #[Layout('layouts.livewire')] #[Title('Administración de Autores')] class e
         $this->resetPage();
     }
 
-    public function delete(Author $author)
+    public function delete(Author $author, AuthorService $authorService)
     {
         try {
-            if ($author->books()->exists()) {
-                session()->flash('error', 'No se puede eliminar el autor porque tiene libros asociados.');
-                return;
-            }
-
-            $author->delete();
+            $authorService->delete($author);
             session()->flash('success', 'Autor eliminado con éxito.');
         } catch (\Exception $e) {
             session()->flash('error', 'Error al eliminar: ' . $e->getMessage());
