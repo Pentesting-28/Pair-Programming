@@ -4,6 +4,8 @@ A reference project that demonstrates how multiple architectural patterns coexis
 
 **Project concept, architecture design, and implementation by the author.** This project was conceived as a hands-on demonstration of software engineering skills, including the ability to integrate multiple front-end technologies within the Laravel ecosystem, apply SOLID principles in a real codebase, and design scalable, maintainable structures from the ground up.
 
+![Project banner](docs/images/banner.png)
+
 ---
 
 ## Project level
