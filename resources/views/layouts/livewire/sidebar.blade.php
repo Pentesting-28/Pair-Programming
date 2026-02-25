@@ -18,7 +18,7 @@
                         {{ __('Autores') }}
                     </flux:navlist.item>
 
-                    <flux:navlist.item icon="book-open" href="#" class="opacity-50" wire:navigate>
+                    <flux:navlist.item icon="book-open" :href="route('livewire.books.index')" :current="request()->routeIs('livewire.books.*')" wire:navigate>
                         {{ __('Libros') }}
                     </flux:navlist.item>
                 </flux:navlist.group>

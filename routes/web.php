@@ -28,6 +28,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::livewire('/authors/create', 'authors.form')->name('authors.new');
         Route::livewire('/authors/{author}', 'authors.show')->name('authors.show');
         Route::livewire('/authors/{author}/edit', 'authors.form')->name('authors.edit');
+
+        Route::livewire('/books', 'books.index')->name('books.index');
+        Route::livewire('/books/create', 'books.form')->name('books.new');
+        Route::livewire('/books/{book}/edit', 'books.form')->name('books.edit');
     });
 });
 
