@@ -5,6 +5,7 @@ namespace Tests\Feature\Settings;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Fortify\Features;
 use Livewire\Livewire;
 use Tests\TestCase;
 
@@ -14,6 +15,10 @@ class PasswordUpdateTest extends TestCase
 
     public function test_password_can_be_updated(): void
     {
+        if (! Features::canUpdateProfileInformation()) {
+            $this->markTestSkipped('Settings/Profile features are disabled.');
+        }
+
         $user = User::factory()->create([
             'password' => Hash::make('password'),
         ]);
@@ -33,6 +38,10 @@ class PasswordUpdateTest extends TestCase
 
     public function test_correct_password_must_be_provided_to_update_password(): void
     {
+        if (! Features::canUpdateProfileInformation()) {
+            $this->markTestSkipped('Settings/Profile features are disabled.');
+        }
+
         $user = User::factory()->create([
             'password' => Hash::make('password'),
         ]);
