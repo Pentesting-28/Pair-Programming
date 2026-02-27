@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Author;
-use App\Models\Country;
-use App\Services\AuthorService;
-use App\Services\FileService;
+use App\Models\{Author, Country};
+use App\Services\{AuthorService, FileService};
 use App\DTOs\AuthorData;
-use App\Http\Requests\Author\StoreRequest;
-use App\Http\Requests\Author\UpdateRequest;
+use App\Http\Requests\Author\{StoreRequest,UpdateRequest};
+use Illuminate\Http\Request;
 
 class AuthorController extends Controller
 {
@@ -20,10 +18,11 @@ class AuthorController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $authors = Author::select('id', 'name', 'last_name', 'birth_date', 'country_id', 'photo_path')
             ->with('country:id,common_name,flag_svg_path')
+            ->tap(new \App\Scopes\AuthorSearch($request->query('search')))
             ->paginate(10);
         return view('mvc.authors.index', compact('authors'));
     }
