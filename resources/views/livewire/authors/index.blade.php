@@ -31,11 +31,16 @@ new #[Layout('layouts.livewire')] #[Title('Administración de Autores')] class e
     public function with()
     {
         return [
-            'authors' => Author::with('country')
-                ->where(function($query) {
-                    $query->where('name', 'like', '%' . $this->search . '%')
-                          ->orWhere('last_name', 'like', '%' . $this->search . '%');
-                })
+            'authors' => Author::select(
+                    'id', 
+                    'name', 
+                    'last_name', 
+                    'birth_date', 
+                    'country_id', 
+                    'photo_path'
+                )
+                ->with('country:id,common_name,flag_svg_path')
+                ->search($this->search)
                 ->paginate(10),
         ];
     }

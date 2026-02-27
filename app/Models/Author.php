@@ -15,6 +15,19 @@ class Author extends Model
     ];
 
     /**
+     * Scope for search authors by name or last name.
+     */
+    public function scopeSearch($query, $term)
+    {
+        if (!$term) return $query;
+        return $query->whereAny(
+            ['name', 'last_name'], 
+            'like', 
+            "%{$term}%"
+        );
+    }
+
+    /**
      * Get the author's photo URL.
      */
     protected function photoUrl(): \Illuminate\Database\Eloquent\Casts\Attribute
