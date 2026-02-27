@@ -197,7 +197,10 @@ Controller / Livewire Component
        DTO                        <-- Typed data transport
         |
         v
-      Service                     <-- Business logic
+     Service                      <-- Business logic (coordination)
+        |
+        v
+ Query Component                  <-- Modular query logic (tap/pipe)
         |
         v
       Model                       <-- Persistence (Eloquent)
@@ -218,6 +221,15 @@ Contain the business logic and coordinate operations between the model and the f
 - `AuthorService` — Create, update, and delete authors. Handles cleanup of previous photos on update and validates referential integrity before deletion (an author with associated books cannot be deleted).
 - `BookService` — Book CRUD operations.
 - `FileService` — Centralizes file upload and deletion across any storage disk. Ready to migrate from `public` to `s3` by changing a single environment variable.
+
+### Query Components (`app/Scopes/`)
+
+Modern approach introduced in **Laravel 12.x** to extract repeated query logic into reusable, invokable objects.
+
+- `AuthorSearch` — Encapsulates the logic for searching authors by name or last name using `whereAny`.
+- `BookSearch` — Handles complex book searching across title, ISBN, and the author relationship (`orWhereHas`).
+
+These components are applied using the `tap()` method: `->tap(new AuthorSearch($term))`.
 
 ---
 
@@ -506,6 +518,9 @@ app/
 │   ├── Book.php
 │   ├── Country.php
 │   └── User.php
+├── Scopes/                         # Query Scope Components (Laravel 12.x)
+│   ├── AuthorSearch.php
+│   └── BookSearch.php
 ├── Providers/                      # Service Providers
 └── Services/                       # Business logic (shared)
     ├── AuthorService.php
@@ -600,6 +615,7 @@ composer lint
 - **Version control**: Git with a main branch. Commits reflect each development iteration.
 - **Styling**: Tailwind CSS 4 configured via the Vite plugin.
 - **Forms**: Each architecture defines its own validation layer (FormRequest vs. Livewire Form), but both delegate to the same Service.
+- **Query Logic**: Repeated searching and filtering logic is extracted into **Query Components** (`app/Scopes/`) using the `tap()`/`pipe()` patterns from Laravel 12.x.
 - **File storage**: Centralized in `FileService`. Uses the `public` disk with a symlink via `storage:link`.
 - **Authentication**: Laravel Fortify with support for login, registration, email verification, and two-factor authentication.
 
