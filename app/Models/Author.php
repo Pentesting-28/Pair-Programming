@@ -14,6 +14,7 @@ class Author extends Model
         'photo_path',
     ];
 
+
     /**
      * Get the author's photo URL.
      */

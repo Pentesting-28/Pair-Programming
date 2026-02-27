@@ -22,6 +22,22 @@
                 {{ session('error') }}
             </flux:callout>
         @endif
+        
+        <div class="mb-6">
+            <form action="{{ route('mvc.authors.index') }}" method="GET" class="flex items-center gap-2">
+                <flux:input 
+                    name="search" 
+                    value="{{ request('search') }}" 
+                    placeholder="Buscar autor por nombre o apellido..." 
+                    icon="magnifying-glass" 
+                    class="flex-1"
+                />
+                @if(request('search'))
+                    <flux:button variant="ghost" :href="route('mvc.authors.index')" icon="x-mark" />
+                @endif
+                <flux:button type="submit" variant="subtle">Buscar</flux:button>
+            </form>
+        </div>
 
         <flux:card class="overflow-hidden">
             <flux:table>
@@ -101,7 +117,7 @@
             </flux:table>
 
             <div class="px-6 py-4 border-t border-zinc-200/80 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/20">
-                {{ $authors->links() }}
+                {{ $authors->appends(['search' => request('search')])->links() }}
             </div>
         </flux:card>
     </flux:container>

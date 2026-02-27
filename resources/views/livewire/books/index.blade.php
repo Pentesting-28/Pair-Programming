@@ -31,8 +31,7 @@ new #[Layout('layouts.livewire')] #[Title('Administración de Libros')] class ex
     {
         return [
             'books' => Book::with('author')
-                ->where('title', 'like', '%' . $this->search . '%')
-                ->orWhere('isbn', 'like', '%' . $this->search . '%')
+                ->tap(new \App\Scopes\BookSearch($this->search))
                 ->paginate(10),
         ];
     }

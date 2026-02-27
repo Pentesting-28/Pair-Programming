@@ -17,6 +17,28 @@
             </flux:callout>
         @endif
 
+        @if(session('error'))
+            <flux:callout variant="danger" class="mb-6 shadow-sm border-red-200/50 dark:border-red-900/50">
+                {{ session('error') }}
+            </flux:callout>
+        @endif
+
+        <div class="mb-6">
+            <form action="{{ route('mvc.books.index') }}" method="GET" class="flex items-center gap-2">
+                <flux:input 
+                    name="search" 
+                    value="{{ request('search') }}" 
+                    placeholder="Buscar libro por título, autor o ISBN..." 
+                    icon="magnifying-glass" 
+                    class="flex-1"
+                />
+                @if(request('search'))
+                    <flux:button variant="ghost" :href="route('mvc.books.index')" icon="x-mark" />
+                @endif
+                <flux:button type="submit" variant="subtle">Buscar</flux:button>
+            </form>
+        </div>
+
         <flux:card class="overflow-hidden">
             <flux:table>
                 <flux:table.columns>
@@ -102,7 +124,7 @@
             </flux:table>
 
             <div class="px-6 py-4 border-t border-zinc-200/80 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/20">
-                {{ $books->links() }}
+                {{ $books->appends(['search' => request('search')])->links() }}
             </div>
         </flux:card>
     </flux:container>

@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Author;
-use App\Models\Country;
-use App\Services\AuthorService;
-use App\Services\FileService;
+use App\Models\{Author, Country};
+use App\Services\{AuthorService, FileService};
 use App\DTOs\AuthorData;
-use App\Http\Requests\Author\StoreRequest;
-use App\Http\Requests\Author\UpdateRequest;
+use App\Http\Requests\Author\{StoreRequest,UpdateRequest};
+use Illuminate\Http\Request;
 
 class AuthorController extends Controller
 {
@@ -20,12 +18,12 @@ class AuthorController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $authors = Author::with('country')->paginate(
-            perPage: 10,
-            columns: ['id', 'name', 'last_name', 'birth_date', 'country_id', 'photo_path']
-        );
+        $authors = Author::select('id', 'name', 'last_name', 'birth_date', 'country_id', 'photo_path')
+            ->with('country:id,common_name,flag_svg_path')
+            ->tap(new \App\Scopes\AuthorSearch($request->query('search')))
+            ->paginate(10);
         return view('mvc.authors.index', compact('authors'));
     }
 
@@ -34,14 +32,7 @@ class AuthorController extends Controller
      */
     public function create()
     {
-        $countries = Country::orderBy('common_name')->get()->map(function($c) {
-            return [
-                'id' => $c->id,
-                'common_name' => $c->common_name,
-                'flagUrl' => $c->flag_url,
-            ];
-        });
-        
+        $countries = Country::getForSelect();
         return view('mvc.authors.create', compact('countries'));
     }
 
@@ -72,7 +63,10 @@ class AuthorController extends Controller
 
     public function show(Author $author)
     {
-        $author->load('books', 'country');
+        $author->load([
+            'country:id,common_name,flag_svg_path',
+            'books:id,author_id,title,isbn,num_pages'
+        ]);
         return view('mvc.authors.show', compact('author'));
     }
 
@@ -81,13 +75,7 @@ class AuthorController extends Controller
      */
     public function edit(Author $author)
     {
-        $countries = Country::orderBy('common_name')->get()->map(function($c) {
-            return [
-                'id' => $c->id,
-                'common_name' => $c->common_name,
-                'flagUrl' => $c->flag_url,
-            ];
-        });
+        $countries = Country::getForSelect();
         return view('mvc.authors.edit', compact('author', 'countries'));
     }
 
