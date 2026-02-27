@@ -17,10 +17,11 @@ class BookController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $books = Book::select('id', 'title', 'isbn', 'num_pages', 'author_id')
             ->with('author')
+            ->tap(new \App\Scopes\BookSearch($request->query('search')))
             ->paginate(10);
         return view('mvc.books.index', compact('books'));
     }
