@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{Book, Author};
+use App\Models\{Book, Author, Country};
 use Illuminate\Http\Request;
 use App\Http\Requests\Book\{StoreRequest, UpdateRequest};
 use App\Services\BookService;
@@ -33,14 +33,8 @@ class BookController extends Controller
         $authors = Author::select('id', 'name', 'last_name')
             ->orderBy('name')
             ->get();
-        $countries = \App\Models\Country::select('id', 'common_name', 'flag_svg_path')
-            ->orderBy('common_name')
-            ->get()
-            ->map(fn($c) => [
-                'id' => $c->id,
-                'common_name' => $c->common_name,
-                'flagUrl' => $c->flag_url,
-            ]);
+        $countries = Country::getForSelect();
+
         return view('mvc.books.create', compact('authors', 'countries'));
     }
 
@@ -72,15 +66,7 @@ class BookController extends Controller
         $authors = Author::select('id', 'name', 'last_name')
             ->orderBy('name')
             ->get();
-            
-        $countries = \App\Models\Country::select('id', 'common_name', 'flag_svg_path')
-            ->orderBy('common_name')
-            ->get()
-            ->map(fn($c) => [
-                'id' => $c->id,
-                'common_name' => $c->common_name,
-                'flagUrl' => $c->flag_url,
-            ]);
+        $countries = Country::getForSelect();
 
         return view('mvc.books.edit', compact('book', 'authors', 'countries'));
     }

@@ -255,6 +255,7 @@
                 options: countryData,
                 placeholder: 'Selecciona país...',
                 allowEmptyOption: true,
+                maxOptions: null,
                 items: [],
                 render: {
                     option: function(data, escape) {
